@@ -34,7 +34,11 @@ const LoginForm = () => {
 
     const onSubmit = async (values: z.infer<typeof formLoginSchema>) => {
         try {
-            await login(values);
+            const sanitizedValues = {
+                ...values,
+                email: values.email.trim().toLowerCase()
+            };
+            await login(sanitizedValues);
             const user = useStore.getState().user;
             toast.success(`Welcome back, ${user?.name}! 🍵`);
             

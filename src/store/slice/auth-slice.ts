@@ -1,4 +1,4 @@
-import { loginApi, logout as logoutApi } from "@/services/auth-api";
+import { loginApi, logoutApi } from "@/services/auth-api";
 import type { Store } from "@/types/store";
 import type { AuthSlice, LoginCredentials } from "@/types/store/auth";
 import type { StateCreator } from "zustand";
@@ -12,7 +12,7 @@ export const createAuthSlice: StateCreator<
     user: null,
     role: null,
     outlet: null,
-    token: null,
+    accessToken: null,
     isLoading: false,
 
     login: async (credentials: LoginCredentials) => {
@@ -26,7 +26,7 @@ export const createAuthSlice: StateCreator<
             set((state) => {
                 state.user = data.user;
                 state.role = data.user?.role || null;
-                state.token = data.accessToken;
+                state.accessToken = data.accessToken;
                 state.isLoading = false;
             }, false, "auth/login/fulfilled");
         } catch (error) {
@@ -54,10 +54,10 @@ export const createAuthSlice: StateCreator<
             state.outlet = outlet;
         }, false, "auth/setOutlet"),
 
-    setToken: (token) =>
+    setAccessToken: (token) =>
         set((state) => {
-            state.token = token;
-        }, false, "auth/setToken"),
+            state.accessToken = token;
+        }, false, "auth/setAccessToken"),
 
     setIsLoading: (isLoading) =>
         set((state) => {
@@ -74,7 +74,7 @@ export const createAuthSlice: StateCreator<
                 state.user = null;
                 state.role = null;
                 state.outlet = null;
-                state.token = null;
+                state.accessToken = null;
                 state.isLoading = false;
             }, false, "auth/logout");
         }

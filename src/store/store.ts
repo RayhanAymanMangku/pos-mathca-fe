@@ -18,7 +18,7 @@ export const useStore = create<Store>()(
                 partialize: (state) => ({
                     user: state.user,
                     role: state.user?.role ?? null,
-                    token: state.token,
+                    accessToken: state.accessToken,
                     cart: state.cart,
                 }),
                 // Sinkronisasi role dari user ketika data di-rehydrate dari localStorage

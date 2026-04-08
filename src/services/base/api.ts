@@ -11,12 +11,19 @@ const api = axios.create({
     timeout: 10_000,
 });
 
+// Request interceptor to add the access token to the headers
 api.interceptors.request.use(
     (config) => {
-        const token = useStore.getState().token;
+        const isAuthRoute = config.url?.includes('/auth/login');
+        
+        if (isAuthRoute) {
+            return config;
+        }
 
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+        const accessToken = useStore.getState().accessToken;
+
+        if (accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
         }
 
         return config;
@@ -40,14 +47,15 @@ const processQueue = (error: any, token: string | null = null) => {
 
 api.interceptors.response.use(
     (response: AxiosResponse<ApiResponse<unknown>>) => {
+        // Handle common API response format where data is wrapped in 'data' field
         if (response.data && typeof response.data === 'object' && 'data' in response.data) {
             const meta = (response.data as any).meta;
             
             return {
                 ...response,
                 data: response.data.data,
-                ...(meta ? { meta } : {}), // Append meta to the AxiosResponse object
-            };
+                ...(meta ? { meta } : {}),
+            } as any;
         }
         return response;
     },
@@ -57,7 +65,13 @@ api.interceptors.response.use(
         const status = error.response?.status;
         const apiMessage = error.response?.data?.message;
 
+        // Handle 401 Unauthorized errors
         if (status === 401 && originalRequest && !(originalRequest as any)._retry) {
+            // Don't attempt to refresh token if the error is from a login request
+            if (originalRequest.url?.includes('/auth/login')) {
+                return Promise.reject(error);
+            }
+
             if (isRefreshing) {
                 return new Promise((resolve, reject) => {
                     failedQueue.push({ resolve, reject });
@@ -73,17 +87,18 @@ api.interceptors.response.use(
             isRefreshing = true;
 
             try {
+                // Use a separate axios instance for refresh token to avoid interceptor conflict
                 const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/refresh-token`, {}, { withCredentials: true });
                 const { accessToken } = response.data.data;
 
-                useStore.getState().setToken(accessToken);
+                useStore.getState().setAccessToken(accessToken);
                 processQueue(null, accessToken);
 
                 originalRequest.headers.Authorization = `Bearer ${accessToken}`;
                 return api(originalRequest);
             } catch (refreshError) {
                 processQueue(refreshError, null);
-                useStore.getState().logout();
+                await useStore.getState().logout();
                 if (window.location.pathname !== '/') {
                     window.location.href = '/';
                 }
@@ -93,6 +108,7 @@ api.interceptors.response.use(
             }
         }
 
+        // Handle other common error status codes
         if (status === 403) {
             return Promise.reject(new Error(apiMessage ?? 'You do not have permission to access this resource.'));
         }

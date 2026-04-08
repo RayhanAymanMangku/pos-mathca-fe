@@ -15,14 +15,14 @@ export interface AuthSlice {
     user: User | null;
     role: UserRole | null;
     outlet: Outlet | null;
-    token: string | null;
+    accessToken: string | null;
     isLoading: boolean;
     
     login: (credentials: LoginCredentials) => Promise<void>;
     setUser: (user: User | null) => void;
     setRole: (role: UserRole | null) => void;
     setOutlet: (outlet: Outlet | null) => void;
-    setToken: (token: string | null) => void;
+    setAccessToken: (token: string | null) => void;
     setIsLoading: (isLoading: boolean) => void;
     logout: () => Promise<void>;
 }

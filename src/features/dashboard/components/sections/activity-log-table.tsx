@@ -61,11 +61,11 @@ const ActivityLogTable = ({ logs }: ActivityLogTableProps) => {
                                     <td className="px-6 py-5 whitespace-nowrap">
                                         <div className="flex items-center gap-3.5">
                                             <div className="size-9 rounded-xl bg-green-100/50 flex items-center justify-center text-green-800 font-bold text-xs ring-1 ring-green-200/50 shadow-xs transition-transform group-hover:scale-110">
-                                                {log.user.name.charAt(0)}
+                                                {log.user?.name?.charAt(0) || '?'}
                                             </div>
                                             <div className="flex flex-col min-w-0">
-                                                <span className="text-xs font-bold text-gray-900 truncate leading-none mb-1">{log.user.name}</span>
-                                                <span className="text-[10px] text-muted-foreground truncate font-medium tracking-tight">{log.user.email}</span>
+                                                <span className="text-xs font-bold text-gray-900 truncate leading-none mb-1">{log.user?.name || 'System / Deleted User'}</span>
+                                                <span className="text-[10px] text-muted-foreground truncate font-medium tracking-tight">{log.user?.email || 'No email associated'}</span>
                                             </div>
                                         </div>
                                     </td>

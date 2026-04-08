@@ -68,15 +68,16 @@ const POSSection = () => {
                     </div>
                 </div>
 
-                <label className="relative w-full lg:w-96 group cursor-text">
+                <label htmlFor="pos-search" className="relative flex w-full lg:w-96 group cursor-text">
                     <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none transition-colors group-focus-within:text-green-600">
                         <Search size={16} strokeWidth={2.5} className="text-gray-400 group-focus-within:text-green-600 transition-colors" />
                     </div>
                     <Input
+                        id="pos-search"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search product or SKU..."
-                        className="pl-12 h-12 bg-white border-gray-100 rounded-2xl focus:ring-4 focus:ring-green-600/5 focus:border-green-600 transition-all font-bold text-xs uppercase tracking-widest shadow-xs placeholder:text-gray-400"
+                        className="pl-12 h-12 w-full bg-white border-gray-100 rounded-2xl focus:ring-4 focus:ring-green-600/5 focus:border-green-600 transition-all font-bold text-xs uppercase tracking-widest shadow-xs placeholder:text-gray-400"
                     />
                 </label>
             </div>

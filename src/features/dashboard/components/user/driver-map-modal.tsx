@@ -59,7 +59,7 @@ export default function DriverMapModal({ isOpen, onClose, driver: initialDriver 
   const hasLocation = lat !== null && lng !== null;
 
   const lastContact =
-    driver.lastLocationUpdateAt ||
+    driver.locationUpdatedAt ||
     (liveDriver && hasLocation && dataUpdatedAt
       ? new Date(dataUpdatedAt).toISOString()
       : null) ||

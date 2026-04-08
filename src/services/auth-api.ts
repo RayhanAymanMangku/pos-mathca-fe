@@ -6,4 +6,9 @@ const loginApi = async (credentials: LoginCredentials): Promise<LoginResponse> =
     return response.data;
 };
 
-export { loginApi };
+const logout = async (): Promise<{ message: string }> => {
+    const response = await api.post("/auth/logout");
+    return response.data;
+}
+
+export { loginApi, logout };

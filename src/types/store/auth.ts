@@ -8,7 +8,7 @@ export interface LoginCredentials {
 
 export interface LoginResponse {
     user: User;
-    token: string;
+    accessToken: string;
 }
 
 export interface AuthSlice {
@@ -24,5 +24,5 @@ export interface AuthSlice {
     setOutlet: (outlet: Outlet | null) => void;
     setToken: (token: string | null) => void;
     setIsLoading: (isLoading: boolean) => void;
-    logout: () => void;
+    logout: () => Promise<void>;
 }

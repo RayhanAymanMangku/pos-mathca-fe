@@ -12,8 +12,8 @@ export interface User {
     outlet?: Outlet;
     latitude?: number;
     longitude?: number;
-    lastLocationUpdateAt?: string;
-    lastLogin: string;
+    locationUpdatedAt?: string;
+    lastLogin?: string;
     createdAt: string;
     updatedAt: string;
 }

@@ -1,4 +1,4 @@
-import { loginApi } from "@/services/auth-api";
+import { loginApi, logout as logoutApi } from "@/services/auth-api";
 import type { Store } from "@/types/store";
 import type { AuthSlice, LoginCredentials } from "@/types/store/auth";
 import type { StateCreator } from "zustand";
@@ -26,7 +26,7 @@ export const createAuthSlice: StateCreator<
             set((state) => {
                 state.user = data.user;
                 state.role = data.user?.role || null;
-                state.token = data.token;
+                state.token = data.accessToken;
                 state.isLoading = false;
             }, false, "auth/login/fulfilled");
         } catch (error) {
@@ -64,12 +64,19 @@ export const createAuthSlice: StateCreator<
             state.isLoading = isLoading;
         }, false, "auth/setIsLoading"),
 
-    logout: () =>
-        set((state) => {
-            state.user = null;
-            state.role = null;
-            state.outlet = null;
-            state.token = null;
-            state.isLoading = false;
-        }, false, "auth/logout"),
+    logout: async () => {
+        try {
+            await logoutApi();
+        } catch (error) {
+            console.error("Logout API failed:", error);
+        } finally {
+            set((state) => {
+                state.user = null;
+                state.role = null;
+                state.outlet = null;
+                state.token = null;
+                state.isLoading = false;
+            }, false, "auth/logout");
+        }
+    },
 });
